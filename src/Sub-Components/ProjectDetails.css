@@ -1,0 +1,17 @@
+input[type="date"] {
+  text-align: right;
+}
+
+input[type="date"]:before {
+  color: grey;
+  content: attr(placeholder) !important;
+  margin-right: 0.5em;
+}
+.subfinal{
+  background-color: white;
+  border: 1px solid #006872;
+  border-radius: 12px;
+  padding: 10px;
+  font-weight: 700;
+  /* width: 200px; */
+}

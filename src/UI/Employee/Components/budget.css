@@ -1,0 +1,71 @@
+.budget-wrap{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.budget-container{
+    margin-top: 2rem;
+}
+
+.hourly-rate-label{
+    border: 0.1rem solid rgba(0, 0, 0, 0.4);
+border-radius: 1rem;
+color: #006872;
+font-weight: 600;
+width: 12vw;
+padding: 0.4rem 1rem;
+margin: 4rem 1rem;
+background-color: white;
+}
+.budget-container .hourly-input{
+    border: 0.1rem solid rgba(0, 0, 0, 0.4);
+    border-radius: 1rem;
+    /* background: url("../../../imges/currency-dollar.svg") no-repeat scroll 0.8rem 0.8rem; */
+/* padding-left:6rem; */
+text-align: center;
+    color: #006872;
+    font-weight: 600;
+    width: 15vw;
+    padding: 1.2rem;
+    margin-right: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+.hourly-input-img{
+    display: flex;
+    flex-direction: row;
+    /* background-color: #006872; */
+    justify-content: center;
+    align-items: center;
+    border: 0.1rem solid rgba(0, 0, 0, 0.4);
+    border-radius: 1rem;
+    text-align: center;
+    width: 15vw;
+    /* padding: 1.2rem; */
+    margin-right: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+}
+.hourly-input-img input{
+    padding: 1.2rem;
+    text-align: center;
+    margin: 0;
+    border-radius: 1rem;
+    border: none;
+}
+
+.hourly-input-img input[type=text]:focus{
+    outline: none;
+    background-color: white;
+    
+}
+.btn-proposal{
+    background-color: #006872;
+    color: white;
+    font-weight: 600;
+    margin:2rem 0;
+}
+.margintop{
+    margin-top: 8rem;
+}

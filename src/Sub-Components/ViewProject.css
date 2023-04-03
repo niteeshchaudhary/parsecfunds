@@ -1,0 +1,54 @@
+.divview1{
+    background-color: #F5EEEE;
+    width: 100vw;
+    height: 100vw;
+}
+.divview2{
+    background-color: white;
+    height: 200px;
+    border-radius: 10px;
+    padding: 30px;
+}
+.box-icon{
+    /* background-color: #b2a3a3; */
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.272);
+    box-shadow: 1px 1px 1px 1px rgb(0, 0, 0, 0.272);
+    width: 150px;
+    height: 40px;
+    border-radius: 10px;
+    padding-top: 7px;
+    text-align: center;
+}
+.b-1{
+    flex: 0.6;
+    background-color: white;
+    width: 300px;
+    border-radius: 10px;
+    padding: 20px;
+}
+.b-2{
+    flex: 0.4;
+    background-color: white;
+    margin-left: 30px;
+    border-radius: 10px;
+    padding: 20px;
+}
+.mini-box{
+    width: 90px;
+    height: 40px;
+    border: 1px solid gray;
+    border-radius: 10px;
+}
+.col-box{
+    /* background-color: #FFC727;
+    opacity: 30%; */
+    background-color: #FEFCC5;
+    width: auto;
+    height: 160px;
+    border-radius: 10px;
+    padding-top: 60px;
+    /* padding-bottom: auto; */
+    text-align: center;
+    
+}

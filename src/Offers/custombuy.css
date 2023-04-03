@@ -1,0 +1,52 @@
+.cbox {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 3% 4%;
+    width: 100%;
+  }
+  .cboxrow {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 80%;
+  }
+  .cboxrow > input[type=text] {
+    width: 100%;
+    height: 5vh;
+    margin: 0.8rem 0;
+    box-sizing: border-box;
+  }
+  .cflexspan {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    width: 60%;
+  }
+  .cboxbutton {
+    background-color: #006872;
+    height: 3rem;
+    border-radius: 10px;
+    width: 30%;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 7rem;
+    margin-left: 60%;
+    margin-top: 3%;
+  }
+  .cboxbutton:hover {
+    background-color: #0098a2;
+    color: #fff;
+  };
+
+  .cboxback{
+    background-color: #006872;
+    height: 3rem;
+    border-radius: 0.2rem;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 7rem;
+    margin-left: 60%;
+    margin-top: 0%;
+  }

@@ -1,0 +1,56 @@
+
+#result {
+    background: white;
+    height: 100px;
+    width: 50vw;
+    color: #2a2a2a;
+    padding: 1rem;
+  }
+  .chips {
+    display: flex;
+    height: 200px;
+    width: 50vw;
+    margin: 2rem 0;
+    background-color: white;
+    justify-content: start;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+    border-radius: 10px;
+    border: crimson 1px dashed;
+    align-items: baseline;
+    align-content: start;
+  
+    
+    }
+    .chips > .added-chip {
+        margin: 0 10px 5px 0;
+        font-size: 1rem;
+        position: relative;
+        background: #673ab7;
+        color: white;
+        border-radius: 20px;
+        padding: 0.2rem 0.3rem;
+    
+        
+    }
+    .chips > .added-chip>span {
+        margin-right: auto;
+      }
+  
+      .delete-chip {
+        background: #e8e6e6;
+        height: 1.2rem;
+        width: 1.2rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        box-shadow: inset 1px 1px 1px #0000009e;
+  
+        
+      }
+      .delete-chip:hover {
+        color: white;
+        background-color: red;
+      }
+  

@@ -1,0 +1,91 @@
+
+.container-job{
+    /* background-color: yellowgreen; */
+    margin:2rem 6rem;
+}
+.container-job h2, .container-job h5{
+    margin-left: 1rem;
+}
+.container-job .input-f{
+border: 0.1rem solid rgba(90, 90, 90, 0.4);
+border-radius: 0.5rem;
+width: 57.6vw;
+height: 3rem;
+margin: 1rem;
+padding:0rem 1rem;
+}
+.container-job .input-mid{
+margin: 1rem;
+width: 40vw;
+}
+.mid-input-wrap{
+    /* background-color: black; */
+    display: flex;
+    justify-content: space-between;
+    width: 60vw;
+}
+.txtarea-job{
+    margin: 1rem;
+    border-radius: 0.5rem;
+}
+.wrap-add-label{
+    position: relative;
+    /* background-color: blue; */
+}
+.wrap-add-label .add-btn{
+    position: absolute;
+    top: 30%;
+    /* bottom: 0; */
+    /* left: 0; */
+    right: 5%;
+    border: none;
+    color: orange;
+    background-color: transparent;
+}
+.s-up-btn{
+    background-color: #006872;
+    color: white;
+    border: transparent;
+    padding: 0.5rem;
+    border-radius: 0.3rem ;
+   width: 10rem;
+   margin-left: 1rem;
+   margin-bottom: 1rem;
+}
+
+/* style for uploading page starts here */
+.browsefile{
+    /* border:1px solid green; */
+    
+    align-items: center;
+    margin: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    
+}
+
+.moveleft{
+    /* border:1px solid blue; */
+    margin-right: auto;
+    width: 30vw;
+   
+}
+.moveleft h5{
+    color:rgb(138, 138, 138);
+    font-weight: 100;
+}
+.browsefile .moveleft .upload-box{
+    height: 60px;
+    font-size: 18px;
+    /* border:2px solid greenyellow; */
+    background-color: #fff;
+    border-radius: 50px;
+    width:300px;
+    border:none;
+    box-shadow: 1px 1px 10px rgb(160, 160, 160);
+    outline: none;
+    cursor: pointer;
+    margin: 8px;
+
+
+}

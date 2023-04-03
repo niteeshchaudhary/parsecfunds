@@ -1,0 +1,30 @@
+.listcus{
+    color: gray;
+    border-bottom: 1px solid gray;
+}
+.boxcust3{
+    width: 149px;
+    height: 140px;
+    /* background-color: rgb(172, 163, 163); */
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.272);
+    box-shadow: 1px 1px 1px 1px rgb(0, 0, 0, 0.272);
+    /* background-image: linear-gradient(to bottom,white,#F5EEEE); */
+    margin-top: 40px;
+    margin-left: 40px;
+    border-radius: 20px;
+    text-align: center;
+}
+.minboxcust3{
+    width: 50px;
+    height: 60px;
+    /* background-color: rgb(192, 190, 190); */
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.272);
+    box-shadow: 1px 1px 1px 1px rgb(0, 0, 0, 0.272);
+    border-radius: 30px;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 17px;
+}

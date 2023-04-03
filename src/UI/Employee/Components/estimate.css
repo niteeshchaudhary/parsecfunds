@@ -1,0 +1,61 @@
+.estimate-wrap{
+    display: flex;
+    flex-direction: column;
+}
+input[name="scope"] {
+	/* accent-color: yellow; */
+    appearance: none;
+	width: 1.1rem;
+	height: 1.1rem;
+	border: 0.1rem solid #555555;
+	border-radius: 50%;
+	background-clip: content-box;
+	padding: 0.2rem;
+}
+input[name="lvl"] {
+	/* accent-color: yellow; */
+    appearance: none;
+	width: 1.1rem;
+	height: 1.1rem;
+	border: 0.1rem solid #555555;
+	border-radius: 50%;
+	background-clip: content-box;
+	padding: 0.2rem;
+    
+}
+
+input[type="radio"]:checked {
+	background-color: #FFC727;
+}
+.estimate-wrap{
+    /* background-color: #555555; */
+    margin: 1rem;
+    width: 40vw;
+}
+.button-wrap{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    /* background-color: aqua; */
+    width: 35vw;
+    margin-top: 3rem;
+}
+.btn-back{
+    background-color: #8d8d8dad;
+    color: white;
+    width: 10vw;
+    border-radius: 0.3rem;
+}
+.btn-back:hover{
+    color: white;
+}
+.btn-next{
+    color: white;
+    width: 10vw;
+    border-radius: 0.3rem;
+    background-color: teal;
+}
+.btn-next:hover{
+    color: white;
+    background-color: rgba(0, 128, 128, 0.8);
+}
