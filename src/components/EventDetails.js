@@ -227,9 +227,11 @@ export default function EventDetails({ edata, setactv, userprofile }) {
               />
             </Form.Item>
           </Form>
-          {userprofile?.organisation && userprofile != "Parsec" ? (
+          {userprofile?.organisation &&
+          userprofile.organisation !== "Parsec" &&
+          userprofile.organisation !== "Admin" ? (
             <>
-              <Button type="primary" onClick={() => navigate("/funds")}>
+              <Button type="primary" onClick={() => navigate("/sponsor")}>
                 Sponsore Event
               </Button>
               &nbsp;&nbsp;&nbsp;

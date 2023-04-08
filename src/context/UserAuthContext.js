@@ -19,11 +19,21 @@ import {
   get,
   child,
 } from "firebase/database";
+import s_events from "../truffle_abi/Event.json";
+import s_funds from "../truffle_abi/funds.json";
+import Web3 from "web3";
 
 const userAuthContext = createContext();
 
 export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [w3state, setw3state] = useState({
+    web3: null,
+    accounts: null,
+    funds: null,
+    events: null,
+    balance: "",
+  });
   // const [verified,setverified] = useState(false);
   // const navigate = useNavigate();
   async function logIn(email, password) {
@@ -74,9 +84,12 @@ export function UserAuthContextProvider({ children }) {
     return result;
   }
 
-  function logOut() {
+  async function logOut() {
     localStorage.clear();
-    return signOut(auth);
+    await signOut(auth).then(() => {
+      setUser(null);
+    });
+    return await auth.signOut();
   }
 
   function reset(email) {
@@ -92,8 +105,6 @@ export function UserAuthContextProvider({ children }) {
   }
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
-      console.log(currentuser);
-
       if (currentuser && !user) {
         const dbRef = ref(getDatabase());
         var usr = currentuser.email;
@@ -102,9 +113,10 @@ export function UserAuthContextProvider({ children }) {
         get(child(dbRef, "userdata/" + usr2))
           .then((snapshot) => {
             if (snapshot.exists()) {
-              console.log(snapshot.val());
+              //console.log(snapshot.val());
               currentuser["profile"] = snapshot.val();
               setUser(currentuser);
+              console.log(snapshot.val());
             } else {
               console.log("No data available");
             }
@@ -130,12 +142,53 @@ export function UserAuthContextProvider({ children }) {
     };
   }, []);
 
+  async function loadWeb3() {
+    if (window.ethereuem) {
+      window.web3 = new Web3(window.ethereum);
+      await window.ethereum.enable();
+    } else if (window.web3) {
+      window.web3 = new Web3(window.web3.currentProvider);
+    } else {
+      window.alert(
+        "Non-Ethereum browser detected. You should consider trying MetaMask!"
+      );
+    }
+  }
+  async function loadBlockchain() {
+    const web3 = window.web3;
+    const accounts = await web3.eth.getAccounts();
+    const networkID = await web3.eth.net.getId();
+    const deployedNetwork = s_funds.networks[networkID];
+    const balance = await web3.eth.getBalance(accounts[0]);
+    const balanceString = balance.toString();
+    const instancefunds = new web3.eth.Contract(
+      s_funds.abi,
+      deployedNetwork && deployedNetwork.address
+    );
+    const instanceevents = new web3.eth.Contract(
+      s_events.abi,
+      deployedNetwork && deployedNetwork.address
+    );
+
+    setw3state({
+      web3: web3,
+      accounts: accounts[0],
+      funds: instancefunds,
+      events: instanceevents,
+      balance: balanceString,
+    });
+    return accounts[0];
+  }
+
   return (
     <userAuthContext.Provider
       value={{
         user,
         logIn,
         setUserStatus,
+        loadWeb3,
+        loadBlockchain,
+        w3state,
         signUp,
         logOut,
         reset,

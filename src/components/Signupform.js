@@ -41,6 +41,10 @@ const Signupform = ({ actv, setactv }) => {
 
   const addItem = (e) => {
     e.preventDefault();
+    if (lname === "Admin") {
+      alert("Admin is not allowed as an organisation name");
+      return;
+    }
     setItems([...items, lname || `Organisation ${index++}`]);
     setlName("");
     setTimeout(() => {

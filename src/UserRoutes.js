@@ -9,48 +9,15 @@ import {
 } from "react-router-dom";
 import CNavbaar2 from "./components/CNavbaar2";
 
-import BuyConnects from "./Offers/BuyConnects";
-
 import ODashboard from "./components/ODashboard";
 import PDashboard from "./components/PDashboard";
-import Success from "./Offers/Success";
+import ADashboard from "./components/ADashboard";
 
-import Postjob from "./UI/Employee/Jobs/Postjob";
-import UpdatePostedJob from "./UI/Employee/Jobs/UpdatePostjob";
-
-import MainPreview from "./UI/Profile/MainPreview";
-
-import Edashboard from "./UI/Employee/EDashboard/Edashboard";
-
-import Searchjob from "./UI/Employee/Components/Searchjob";
-import Jobdetails from "./UI/Employee/Components/Jobdetails";
-
-import SubmitProposal from "./UI/Employee/Components/SubmitProposal";
-import SubmittedProposal from "./UI/Employee/Components/SubmittedProposal";
-
-import ViewProposal from "./UI/Employee/Components/ViewProposal";
-import ReceiveProposal from "./UI/Employee/Components/ReceiveProposal";
-import EJobdetails from "./UI/Employee/Components/Ejobdetails";
-
-import PostedJob from "./UI/Employee/Components/PostedJob";
-
-import Chatbox from "./Chats/Chatbox";
-import ChatOuterCover from "./Chats/ChatOuterCover";
-import Hire from "./UI/Employee/Components/Hire";
-import ProposalFixed from "./UI/Employee/Components/ProposalFixed";
-import LatestProposal from "./UI/Employee/Components/LatestProposal";
-
-import AddWallet from "./Offers/AddWallet";
-import Withdrawal from "./Offers/Withdrawal";
-import ManageServices from "./Sub-Components/ManageServices";
-
-import SavedJobs from "./UI/SavedJobs";
 import { useUserAuth } from "./context/UserAuthContext";
 import Error from "./Error/Error";
-import RequestAll from "./UI/Employee/Components/RequestAll";
-import ERequestMoney from "./UI/Employee/Components/Erequested/ERequestMoney";
+
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "./Chats/firebase_dep";
+
 import Events from "./components/Events";
 import FundForm from "./components/FundForm";
 export default function UserRoutes({ userprofile, setUserStatus }) {
@@ -62,21 +29,41 @@ export default function UserRoutes({ userprofile, setUserStatus }) {
           <>
             <Route
               path="/dashboard"
-              element={<PDashboard userprofile={userprofile} />}
+              element={<PDashboard userprofile={userprofile} funfrm={0} />}
             />
-            <Route path="/previewProfile" element={<MainPreview />} />
+            <Route
+              path="/funds"
+              element={<PDashboard userprofile={userprofile} funfrm={2} />}
+            />
           </>
-        ) : (
+        ) :
+          userprofile?.organisation === "Admin" ? (
+            <>
+              <Route
+                path="/funds"
+                element={<ADashboard userprofile={userprofile}  />}
+              />
+              <Route
+                path="/dashboard"
+                element={<ADashboard userprofile={userprofile}  />}
+              />
+            </>
+          )
+        : (
           userprofile?.organisation &&
           userprofile?.organisation !== "Parsec" && (
             <>
               <Route
                 path="/funds"
+                element={<ODashboard userprofile={userprofile} funfrm={2} />}
+              />
+              <Route
+                path="/sponsor"
                 element={<FundForm userprofile={userprofile} />}
               />
               <Route
                 path="/dashboard"
-                element={<ODashboard userprofile={userprofile} />}
+                element={<ODashboard userprofile={userprofile} funfrm={0} />}
               />
             </>
           )

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   AutoComplete,
   Button,
@@ -12,14 +12,24 @@ import {
   Row,
   Select,
 } from "antd";
+import { db } from "../firebase";
+import { auth } from "../firebase";
+import app from "../firebase";
+import {
+  getDatabase,
+  onValue,
+  push,
+  ref,
+  set,
+  update,
+  get,
+  child,
+} from "firebase/database";
+import { useUserAuth } from "../context/UserAuthContext";
+import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;
 const { Header, Sider, Content } = Layout;
-interface DataNodeType {
-  value: string;
-  label: string;
-  children?: DataNodeType[];
-}
 
 const residences = [
   {
@@ -92,9 +102,102 @@ const tailFormItemLayout = {
 
 export default function FundForm() {
   const [form] = Form.useForm();
+  const { user, w3state } = useUserAuth();
+  const db = getDatabase(app);
+  const { wallet, setwallet } = useUserAuth(w3state.accounts);
+  const [eventlist, seteventlist] = useState([]);
+  const [ulist, setulist] = useState([
+    {
+      value: "",
+      label: "",
+    },
+  ]);
+  const navigate = useNavigate();
 
-  const onFinish = (values) => {
+  onValue(ref(db, "parsec" + new Date().getFullYear() + "/"), (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      var k = Object.keys(data).length;
+      if (eventlist?.length !== k) {
+        var p = Object.values(data).map((e) => {
+          return {
+            value: e.name,
+            label: e.name,
+            key: e.name,
+            organiser: e?.address || "",
+          };
+        });
+        seteventlist(p);
+        console.log(p);
+      }
+    } else {
+    }
+  });
+
+  useEffect(() => {
+    console.log(ulist);
+    if (w3state && ulist[0].value !== w3state.accounts) {
+      setulist([
+        {
+          value: w3state.accounts,
+          label: w3state.accounts,
+        },
+      ]);
+    }
+  }, []);
+
+  const onFinish = async (values) => {
+    if (values.wallet === undefined) {
+      if (wallet === undefined) {
+        values.wallet = w3state.accounts;
+      } else {
+        values.wallet = wallet;
+      }
+    }
+    if (values.website === undefined) {
+      values.website = "";
+    }
+    if (w3state) {
+      // const bc_events = await w3state.funds.methods.getEvents().call();
+      // const myevent = bc_events.filter((e) => e.name === values.event);
+      const id = 1;
+      const iitdhaccount = await w3state.funds.methods.iitdh().call();
+      const amount = window.web3.utils.toWei(
+        values.donation.toString(),
+        "ether"
+      );
+      console.log("_)", amount);
+
+      await w3state.funds.methods
+        .sponsorThis(iitdhaccount, id, 50000)
+        .send({ from: w3state.accounts, value: amount })
+        .then((res) => {
+          console.log("____", res);
+          values["blockNumber"] = res.blockNumber;
+          values["time"] = new Date().getTime();
+          values["organiser"] = eventlist.filter(
+            (e) => e.name === values.event
+          )[0].organiser;
+          push(ref(db, "parsec" + new Date().getFullYear() + "funds"), values)
+            .then(async (r) => {
+              console.log(w3state, user.profile.name);
+
+              navigate("/dashboard");
+              console.log("** ", r);
+            })
+            .catch((e) => {
+              console.log(e);
+            });
+        });
+    }
     console.log("Received values of form: ", values);
+  };
+
+  const handleChange = (value) => {
+    setwallet(value);
+  };
+  const handleChange2 = (value) => {
+    console.log(value);
   };
 
   const prefixSelector = (
@@ -109,8 +212,7 @@ export default function FundForm() {
   const suffixSelector = (
     <Form.Item name="suffix" noStyle>
       <Select style={{ width: 70 }}>
-        <Option value="USD">$</Option>
-        <Option value="RUP">₹</Option>
+        <Option value="ETH">ETH</Option>
       </Select>
     </Form.Item>
   );
@@ -149,39 +251,25 @@ export default function FundForm() {
         initialValues={{
           residence: ["India", "Karnataka", "Dharwad"],
           prefix: "91",
+          suffix: "ETH",
+          wallet: w3state.accounts,
         }}
         style={{ maxWidth: 600 }}
         scrollToFirstError
       >
-        <Form.Item
-          name="wallet"
-          label="wallet address"
-          rules={[
-            {
-              type: "email",
-              message: "The input is not valid E-mail!",
-            },
-            {
-              required: true,
-              message: "Please input your E-mail!",
-            },
-          ]}
-        >
-          <Input />
+        <Form.Item name="wallet" label="wallet address">
+          <Select
+            defaultValue={w3state.accounts}
+            onChange={handleChange}
+            options={ulist}
+          />
         </Form.Item>
-
         <Form.Item
-          name="password"
-          label="Key"
-          rules={[
-            {
-              required: true,
-              message: "Please input your wallet Key!",
-            },
-          ]}
-          hasFeedback
+          name="event"
+          label="Select Event"
+          rules={[{ required: true, message: "Please Select Events!" }]}
         >
-          <Input.Password />
+          <Select onChange={handleChange2} options={eventlist} />
         </Form.Item>
 
         <Form.Item
@@ -244,7 +332,7 @@ export default function FundForm() {
         <Form.Item
           name="website"
           label="Website"
-          rules={[{ required: true, message: "Please input website!" }]}
+          rules={[{ message: "Please input website!" }]}
         >
           <AutoComplete
             options={websiteOptions}
@@ -256,9 +344,9 @@ export default function FundForm() {
         </Form.Item>
 
         <Form.Item
-          name="intro"
-          label="Intro"
-          rules={[{ required: true, message: "Please input Intro" }]}
+          name="note"
+          label="Note"
+          rules={[{ required: true, message: "Please input Note" }]}
         >
           <Input.TextArea showCount maxLength={100} />
         </Form.Item>
@@ -277,7 +365,7 @@ export default function FundForm() {
           {...tailFormItemLayout}
         >
           <Checkbox>
-            I have read the <a href="">agreement</a>
+            I have read the <a href="#">agreement</a>
           </Checkbox>
         </Form.Item>
         <Form.Item {...tailFormItemLayout}>

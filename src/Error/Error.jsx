@@ -36,11 +36,12 @@ function Error() {
         </div>
       ) : (
         <div className="d-flex justify-content-center align-items-center">
-          <img
+          {/* <img
             style={{ height: "100vh" }}
             src={require("../imges/Error_page.svg").default}
             alt=""
-          />
+          /> */}
+          <h1>404 Not Fount.</h1>
         </div>
       )}
     </>

@@ -56,12 +56,12 @@ const { TextArea } = Input;
 // }
 const fileList = [];
 
-export default function EventForm({ actv, setactv }) {
+export default function EventForm({ web3state, setCform }) {
   const [loadingState, setLoadingState] = useState(false);
   const [componentDisabled, setComponentDisabled] = useState(false);
 
   const [error, setError] = useState("");
-  const { logIn } = useUserAuth();
+  const { user, w3state, loadWeb3, loadBlockchain } = useUserAuth();
   const navigate = useNavigate();
   const [items, setItems] = useState(["Parsec", "Other"]);
   const [pic, setpic] = useState("");
@@ -101,7 +101,7 @@ export default function EventForm({ actv, setactv }) {
     }
   }
   const handleSubmit = async (values) => {
-    console.log(values);
+    console.log(w3state.accounts);
     setError("");
     try {
       // console.log(/^[a-zA-Z ]*$/i.test(values.name));
@@ -112,23 +112,42 @@ export default function EventForm({ actv, setactv }) {
       //   throw new Error("confirm password doesn't match with the password.");
       // }
       values["teammembers"] = tm;
-      values["date"] = [String(values.date[0]["$d"]), String(values.date[1]["$d"])];
+      values["date"] = [
+        String(values.date[0]["$d"]),
+        String(values.date[1]["$d"]),
+      ];
       values["image"] = pic;
       console.log(values);
       setComponentDisabled(true);
 
-      // await signUp(values);
-      set(
-        ref(db, "parsec" + new Date().getFullYear() + "/" + values.name),
-        values
-      )
-        .then((r) => {
-          console.log(r);
-        })
-        .catch((e) => {
-          console.log(e);
-        });
-      navigate("/dashboard");
+      if (w3state?.accounts) {
+        w3state.events.methods
+          .createEvent(values.name, new Date().getFullYear(), user.profile.name)
+          .send({ from: w3state.accounts })
+          .then((res) => {
+            values["owner"] = {
+              name: user.profile.name,
+              email: user.profile.email,
+            };
+            values["address"] = w3state.accounts;
+
+            set(
+              ref(db, "parsec" + new Date().getFullYear() + "/" + values.name),
+              values
+            )
+              .then((r) => {
+                console.log(w3state, user.profile.name);
+
+                console.log("____", r);
+                setCform(0);
+
+                console.log("** ", res);
+              })
+              .catch((e) => {
+                console.log(e);
+              });
+          });
+      }
     } catch (err) {
       var error = err.message.includes(":")
         ? err.message.slice(err.message.indexOf(":") + 1)
@@ -136,13 +155,6 @@ export default function EventForm({ actv, setactv }) {
       setError(error);
       setComponentDisabled(false);
     }
-  };
-
-  const signup = () => {
-    setactv(1);
-  };
-  const forgotpass = () => {
-    setactv(2);
   };
 
   return (
@@ -236,6 +248,14 @@ export default function EventForm({ actv, setactv }) {
           <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
             <Button type="primary" htmlType="submit">
               Add Event
+            </Button>
+            <Divider type="vertical" />
+            <Button
+              type="secondry"
+              style={{ border: "0.1rem black solid" }}
+              onClick={() => setCform(0)}
+            >
+              Back
             </Button>
           </Form.Item>
         </Form>

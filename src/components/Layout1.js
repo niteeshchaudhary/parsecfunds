@@ -1,5 +1,5 @@
 import { DatePicker } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -12,13 +12,23 @@ import LoginForm from "./Loginform";
 import Signupform from "./Signupform";
 import CNavbaar from "./CNavbaar";
 import ForgotPass from "./ForgotPass";
-
+import { useUserAuth } from "../context/UserAuthContext";
+import { useNavigate } from "react-router-dom";
 const { Header, Sider, Content } = Layout;
+
 export default function Layout1({ frm, fmn }) {
   const [signInUP, setsignInUP] = useState(fmn);
+  const { user } = useUserAuth();
+  const navigate = useNavigate();
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  useEffect(() => {
+    // if (user) {
+    //   navigate("/dashboard");
+    // }
+  }, [user, navigate]);
   return (
     <Layout>
       <Layout className="site-layout">

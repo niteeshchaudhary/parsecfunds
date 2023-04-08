@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import SignUp from "./UserAuth/SignUp";
-import Verification from "./UserAuth/Verification";
-import Forgot from "./UserAuth/Forgot";
 
-import Action from "./UserAuth/Action";
-import Terms_condition from "./UI/Terms/Terms_condition";
 
 import { useUserAuth } from "./context/UserAuthContext";
 import Error from "./Error/LoadError";
@@ -19,7 +14,6 @@ import CNavbaar from "./components/CNavbaar";
 
 export default function AllRoutes() {
   const { user, setUserStatus } = useUserAuth();
-  console.log(user);
   return (
     <>
       <Routes>

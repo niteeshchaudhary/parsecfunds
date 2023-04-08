@@ -1,18 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Layout, Menu, theme } from "antd";
 
-import { Card, Col, Row } from "antd";
+import { Card, Col, Row, Button } from "antd";
 import EventForm from "./EventForm";
+import ShowFundsParsec from "./ShowFundsParsec";
+import { useUserAuth } from "../context/UserAuthContext";
+import { useNavigate } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 
-export default function PDashboard({ frm, fmn }) {
-  const [cform, setCform] = useState(0);
+export default function PDashboard({ funfrm, fmn }) {
+  const [cform, setCform] = useState(funfrm);
+  const [wholder, setwholder] = useState("");
+  const { user, loadWeb3, loadBlockchain, w3state } = useUserAuth();
 
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+  useEffect(() => {
+    loadWeb3();
+    const hldr = loadBlockchain();
+    if (wholder === "") {
+      setwholder(hldr);
+    }
+  }, [user, loadWeb3, loadBlockchain, wholder]);
   return (
     <Layout>
       <Layout className="site-layout">
@@ -32,7 +44,7 @@ export default function PDashboard({ frm, fmn }) {
                   hoverable
                   title="Add Event"
                   bordered={false}
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", minHeight: "2rem" }}
                   onClick={() => {
                     setCform(1);
                   }}
@@ -47,21 +59,14 @@ export default function PDashboard({ frm, fmn }) {
                   hoverable
                   title="Funds"
                   bordered={false}
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: "pointer", minHeight: "2rem" }}
+                  onClick={() => {
+                    setCform(2);
+                  }}
                 >
-                  Add Funds to be Raised
+                  see Funds Raised
                   <br />
                   &nbsp;
-                </Card>
-              </Col>
-              <Col span={8}>
-                <Card
-                  hoverable
-                  title="See Details"
-                  bordered={false}
-                  style={{ cursor: "pointer" }}
-                >
-                  See Details of Events and Funds
                 </Card>
               </Col>
             </Row>
@@ -79,11 +84,16 @@ export default function PDashboard({ frm, fmn }) {
               }}
             >
               <h1>Add Event</h1>
-              <EventForm />
+              <EventForm web3state={w3state} setCform={setCform} />
             </Content>
           </>
         ) : cform === 2 ? (
-          <Content></Content>
+          <>
+            <ShowFundsParsec web3state={w3state} />
+            <Button type="primary" onClick={() => setCform(0)}>
+              Back
+            </Button>
+          </>
         ) : (
           <Content></Content>
         )}

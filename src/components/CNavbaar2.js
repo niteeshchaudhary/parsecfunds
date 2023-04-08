@@ -68,11 +68,19 @@ function ResponsiveAppBar({ userprofile }) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [session, setSession] = React.useState(false);
-  const { user, logOut } = useUserAuth();
+  const { user, w3state, logOut } = useUserAuth();
   const navigate = useNavigate();
   const items = [
     {
       key: "1",
+      label: <p>Address: {w3state?.accounts}</p>,
+    },
+    {
+      key: "2",
+      label: <p>Balance : {w3state?.balance} ETH</p>,
+    },
+    {
+      key: "3",
       label: (
         <Button
           onClick={() => {
@@ -85,7 +93,7 @@ function ResponsiveAppBar({ userprofile }) {
       ),
     },
   ];
-  console.log(userprofile);
+  //console.log(userprofile);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -94,7 +102,14 @@ function ResponsiveAppBar({ userprofile }) {
   };
 
   const handleClickNavMenu = (e) => {
+    var prev = window.location.pathname;
     navigate("/" + e.currentTarget.textContent.toLowerCase());
+    if (
+      window.location.pathname === "/dashboard" &&
+      (prev === window.location.pathname || prev === "funds")
+    )
+      window.location.reload();
+
     setAnchorElNav(null);
   };
   const handleCloseNavMenu = (e) => {
@@ -236,16 +251,16 @@ function ResponsiveAppBar({ userprofile }) {
             </Box>
           ) : (
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title={userprofile?.name}>
-                <Dropdown menu={{ items }} placement="bottomRight" arrow>
-                  <Button
-                    onClick={handleCloseNavMenu}
-                    sx={{ my: 2, color: "white", display: "block" }}
-                  >
-                    {userprofile?.name}
-                  </Button>
-                </Dropdown>
-              </Tooltip>
+              {/* <Tooltip title={userprofile?.name}> */}
+              <Dropdown menu={{ items }} placement="bottomRight" arrow>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {userprofile?.name}
+                </Button>
+              </Dropdown>
+              {/* </Tooltip> */}
             </Box>
           )}
         </Toolbar>

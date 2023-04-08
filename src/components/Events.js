@@ -51,15 +51,12 @@ export default function Events({ userprofile, frm, fmn }) {
     const data = snapshot.val();
     if (data) {
       var k = Object.keys(data).length;
-      if (len !== k) {
-        lastlen(k);
+      if (events.length !== k) {
         setevents(Object.values(data));
-        console.log(Object.values(data));
       }
     } else {
-      if (len !== 0) {
+      if (events.length !== 0) {
         setevents([]);
-        lastlen(0);
       }
     }
   });
@@ -90,19 +87,27 @@ export default function Events({ userprofile, frm, fmn }) {
             <Content
               style={{
                 margin: "24px 16px",
-                padding: "3% 28%",
+                padding: "3% 3%",
                 minHeight: 780,
                 height: "100%",
                 background: colorBgContainer,
               }}
             >
               <h1>Events:</h1>
-              <div style={{ display: "flex", flexWrap: "wrap" }}>
-                {events.map((event) => {
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                  flexWrap: "wrap",
+                }}
+              >
+                {events.map((event, index) => {
                   return (
                     <Card
                       hoverable
-                      style={{ width: 240 }}
+                      key={index}
+                      style={{ width: 240, margin: "1rem" }}
                       cover={<img alt="example" src={event.image} />}
                       onClick={() => {
                         seteventdetails(event);
@@ -140,10 +145,13 @@ export default function Events({ userprofile, frm, fmn }) {
             >
               {eventdetails?.name}
             </p>
-            <EventDetails edata={eventdetails} setactv={seteventd} userprofile={userprofile} />
+            <EventDetails
+              edata={eventdetails}
+              setactv={seteventd}
+              userprofile={userprofile}
+            />
           </Content>
         )}
-        ;
       </Layout>
     </Layout>
   );
