@@ -10,6 +10,7 @@ import Web3 from "web3";
 import { useEffect, useState } from "react";
 
 function App() {
+  
   return (
     <UserAuthContextProvider>
       <div className="App">

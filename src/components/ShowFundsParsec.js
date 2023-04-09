@@ -87,7 +87,8 @@ const columns = [
     title: "Time",
     dataIndex: "time",
     sorter: {
-      compare: (a, b) => a.time - b.time,
+      compare: (a, b) =>
+        new Date(a.time).getTime() - new Date(b.time).getTime(),
       multiple: 4,
     },
   },
@@ -143,10 +144,12 @@ export default function ShowFundsParsec({ actv, setactv }) {
           var vlist = Object.values(dt);
           var mapper = {};
           console.log(vlist);
-          var tlst = vlist.filter((e) => w3state.accounts === e?.organiser).map((e) => {
-            mapper[e.blockNumber] = e.event;
-            return [e.blockNumber, e.event];
-          });
+          var tlst = vlist
+            .filter((e) => w3state.accounts === e?.organiser)
+            .map((e) => {
+              mapper[e.blockNumber] = e;
+              return [e.blockNumber, e.event];
+            });
           console.log("->", mapper);
           var txns = tlst.map((e) => getTransactions(e[0]));
           console.log(txns);
@@ -156,11 +159,13 @@ export default function ShowFundsParsec({ actv, setactv }) {
               return {
                 key: e[0].blockNumber,
                 blockNumber: e[0].blockNumber,
-                event: mapper[e[0].blockNumber],
+                event: mapper[e[0].blockNumber].event,
                 value: e[0].value,
                 to: e[0].to,
                 gas: e[0].gas,
-                sender: e[0].from,
+                sender:
+                  mapper[e[0].blockNumber]?.sendername + ` : (${e[0].from})`,
+                time: new Date(mapper[e[0].blockNumber].time).toLocaleString(),
               };
             });
             console.log("**", d);
