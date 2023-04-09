@@ -68,7 +68,7 @@ const columns = [
     dataIndex: "event",
   },
   {
-    title: "To",
+    title: "To Contract",
     dataIndex: "to",
   },
   {
@@ -87,7 +87,8 @@ const columns = [
     title: "Time",
     dataIndex: "time",
     sorter: {
-      compare: (a, b) => a.time - b.time,
+      compare: (a, b) =>
+        new Date(a.time).getTime() - new Date(b.time).getTime(),
       multiple: 4,
     },
   },
@@ -133,6 +134,7 @@ export default function ShowFunds({ actv, setactv }) {
     // [25, 24, 23, 22, 21].forEach((e) => {
     //   getTransactions(e);
     // });
+    console.log(year);
     onValue(ref(db, "parsec" + year + "funds"), (snapshot) => {
       const dt = snapshot.val();
       if (dt) {
@@ -146,7 +148,7 @@ export default function ShowFunds({ actv, setactv }) {
           var tlst = vlist
             .filter((e) => w3state.accounts === e.wallet)
             .map((e) => {
-              mapper[e.blockNumber] = e.event;
+              mapper[e.blockNumber] = e;
               return [e.blockNumber, e.event];
             });
           console.log("->", mapper);
@@ -157,11 +159,12 @@ export default function ShowFunds({ actv, setactv }) {
               return {
                 key: e[0].blockNumber,
                 blockNumber: e[0].blockNumber,
-                event: mapper[e[0].blockNumber],
+                event: mapper[e[0].blockNumber]?.event,
                 value: e[0].value,
-                to: e[0].to,
+                to: "IITDH : " + e[0].to,
                 gas: e[0].gas,
                 sender: e[0].from,
+                time: new Date(mapper[e[0].blockNumber].time).toLocaleString(),
               };
             });
             console.log("**", d);
@@ -169,9 +172,10 @@ export default function ShowFunds({ actv, setactv }) {
           });
         }
       } else {
+        setdata([]);
       }
     });
-  }, []);
+  }, [year]);
 
   return (
     <>

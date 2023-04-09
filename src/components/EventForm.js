@@ -7,6 +7,7 @@ import {
   InputNumber,
   Select,
   Divider,
+  Modal,
   Space,
 } from "antd";
 import { Radio, Cascader, DatePicker, TreeSelect, Switch, Upload } from "antd";
@@ -76,6 +77,29 @@ export default function EventForm({ web3state, setCform }) {
   //     inputRef.current?.focus();
   //   }, 0);
   // };
+  const [modal, contextHolder] = Modal.useModal();
+  const countDown = () => {
+    let secondsToGo = 5;
+    window.ethereum.request({ method: "eth_requestAccounts" }).then((res) => {
+      // Return the address of the wallet
+      console.log(res);
+    });
+    const instance = modal.error({
+      title: "Wallet not connected",
+      content: `MetaMask is not connected.`,
+    });
+    const timer = setInterval(() => {
+      secondsToGo -= 1;
+      instance.update({
+        content: `Please connect your wallet to Metamask to continue.`,
+      });
+    }, 1000);
+    setTimeout(() => {
+      clearInterval(timer);
+      instance.destroy();
+    }, secondsToGo * 1000);
+  };
+
   const handleChange = (value) => {
     console.log(`selected ${value}`);
     settm(value);
@@ -146,6 +170,14 @@ export default function EventForm({ web3state, setCform }) {
               .catch((e) => {
                 console.log(e);
               });
+          })
+          .catch((e) => {
+            
+            countDown();
+            setError(
+              "Error Connecting to Metamask. Please Connect to Metamask wallet and try again."
+            );
+            setComponentDisabled(false);
           });
       }
     } catch (err) {

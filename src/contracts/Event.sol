@@ -14,26 +14,28 @@ contract Event {
     }
 
     //all events till date
-    uint eventCount=0;
-    parsecEvent [] public events;
+    uint eventCount = 0;
+    parsecEvent[] public events;
 
-    constructor () {
-        iitdh = payable(msg.sender);
+    constructor() {
+        iitdh = payable(0xdFa86baaa47B5A59c6C41F90efE3bF37E7EAEa5C);
     }
 
-    modifier onlyIITDh {
-        require(iitdh == msg.sender);
+    modifier onlyIITDh() {
+        require(iitdh == 0xdFa86baaa47B5A59c6C41F90efE3bF37E7EAEa5C);
         _;
     }
 
-    function createEvent(string memory _name, uint _year, string memory _organiser) public {
+    function createEvent(
+        string memory _name,
+        uint _year,
+        string memory _organiser
+    ) public {
         eventCount++;
         events.push(parsecEvent(eventCount, _name, _year, _organiser));
     }
 
-    function getEvents() public view returns(parsecEvent[] memory) {
+    function getEvents() public view returns (parsecEvent[] memory) {
         return events;
     }
-
-
 }
