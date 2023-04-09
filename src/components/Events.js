@@ -58,10 +58,7 @@ export default function Events({ userprofile, frm, fmn }) {
         setevents(Object.values(data));
       }
     } else {
-      if (
-        events.length === 0 ||
-        (events.length === 1 && events[0]?.name !== "No Events Found")
-      ) {
+      if (events.length === 0 || events[0]?.name !== "No Events Found") {
         setevents([
           {
             name: "No Events Found",
