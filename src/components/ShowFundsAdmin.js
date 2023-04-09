@@ -56,7 +56,7 @@ const columns = [
     },
   },
   {
-    title: "Value",
+    title: "Value in ETH",
     dataIndex: "value",
     sorter: {
       compare: (a, b) => a.value - b.value,
@@ -68,7 +68,7 @@ const columns = [
     dataIndex: "event",
   },
   {
-    title: "To Contract",
+    title: "To Organiser",
     dataIndex: "to",
   },
   {
@@ -160,13 +160,15 @@ export default function ShowFundsAdmin({ actv, setactv }) {
               return {
                 key: e[0].blockNumber,
                 blockNumber: e[0].blockNumber,
-                event: mapper[e[0].blockNumber].event,
-                value: e[0].value,
-                to: e[0].to,
+                event: mapper[e[0].blockNumber]?.event,
+                value: e[0].value / 1000000000000000000,
+                to: mapper[e[0].blockNumber]?.organiser,
                 gas: e[0].gas,
                 sender:
                   mapper[e[0].blockNumber]?.sendername + ` : (${e[0].from})`,
-                time: new Date(mapper[e[0].blockNumber].time).toLocaleString(),
+                time: new Date(
+                  mapper[e[0]?.blockNumber]?.time
+                ).toLocaleString(),
               };
             });
             console.log("**", d);
