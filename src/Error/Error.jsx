@@ -15,8 +15,7 @@ function Error() {
   const [load, setLoad] = useState(true);
   useEffect(() => {
     setTimeout(() => {
-      window.location.reload();
-      //setLoad(false);
+      setLoad(false);
     }, 5000);
   }, []);
   return (

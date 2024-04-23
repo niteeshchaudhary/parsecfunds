@@ -10,7 +10,6 @@ import {
   InputNumber,
   Layout,
   Row,
-  Modal,
   Select,
 } from "antd";
 import { db } from "../firebase";
@@ -113,28 +112,6 @@ export default function FundForm() {
       label: "",
     },
   ]);
-  const [modal, contextHolder] = Modal.useModal();
-  const countDown = () => {
-    let secondsToGo = 5;
-    window.ethereum.request({ method: "eth_requestAccounts" }).then((res) => {
-      // Return the address of the wallet
-      console.log(res);
-    });
-    const instance = modal.error({
-      title: "Wallet not connected",
-      content: `MetaMask is not connected.`,
-    });
-    const timer = setInterval(() => {
-      secondsToGo -= 1;
-      instance.update({
-        content: `Please connect your wallet to Metamask to continue.`,
-      });
-    }, 1000);
-    setTimeout(() => {
-      clearInterval(timer);
-      instance.destroy();
-    }, secondsToGo * 1000);
-  };
   const navigate = useNavigate();
 
   onValue(ref(db, "parsec" + new Date().getFullYear() + "/"), (snapshot) => {
@@ -180,7 +157,6 @@ export default function FundForm() {
     if (values.website === undefined) {
       values.website = "";
     }
-
     if (w3state) {
       // const bc_events = await w3state.funds.methods.getEvents().call();
       // const myevent = bc_events.filter((e) => e.name === values.event);
@@ -193,14 +169,14 @@ export default function FundForm() {
       console.log("_)", amount);
 
       await w3state.funds.methods
-        .sponsorThis(iitdhaccount, id,  amount)
+        .sponsorThis(iitdhaccount, id, 50000)
         .send({ from: w3state.accounts, value: amount })
         .then((res) => {
           console.log("____", res);
           values["blockNumber"] = res.blockNumber;
           values["time"] = new Date().getTime();
           values["organiser"] = eventlist.filter(
-            (e) => e.value === values.event
+            (e) => e.name === values.event
           )[0].organiser;
           push(ref(db, "parsec" + new Date().getFullYear() + "funds"), values)
             .then(async (r) => {
@@ -210,15 +186,8 @@ export default function FundForm() {
               console.log("** ", r);
             })
             .catch((e) => {
-              
               console.log(e);
             });
-        })
-        .catch((e) => {
-          //showModal();
-          countDown();
-          
-          console.log(e);
         });
     }
     console.log("Received values of form: ", values);
@@ -274,7 +243,6 @@ export default function FundForm() {
         height: "100%",
       }}
     >
-      {contextHolder}
       <Form
         {...formItemLayout}
         form={form}

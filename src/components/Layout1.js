@@ -36,7 +36,7 @@ export default function Layout1({ frm, fmn }) {
         <Content
           style={{
             margin: "24px 16px",
-            padding: "10% 28%",
+            padding: "12% 28%",
             minHeight: 280,
             height: "100%",
             background: colorBgContainer,

@@ -8,22 +8,16 @@ import {
   useMatch,
 } from "react-router-dom";
 import { SpinnerDotted } from "spinners-react";
-import { useUserAuth } from "../context/UserAuthContext";
 
 function Error() {
   const dest = useLocation();
-  const { user, setUserStatus, errorsetuser } = useUserAuth();
   console.log(dest.pathname.toLowerCase());
   const [load, setLoad] = useState(true);
   useEffect(() => {
     setTimeout(() => {
-      if (!(user?.profile.profile === undefined)) {
-        errorsetuser();
-        window.location.reload();
-      }
-      // setLoad(false);
-    }, 10000);
-  }, [user]);
+      setLoad(false);
+    }, 5000);
+  }, []);
   return (
     <>
       {load ? (

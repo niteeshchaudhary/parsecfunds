@@ -7,7 +7,6 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { SpinnerCircular } from "spinners-react";
 import { Layout, Menu, theme, Typography } from "antd";
 import LoginForm from "./Loginform";
 import Signupform from "./Signupform";
@@ -29,7 +28,6 @@ import {
 } from "firebase/database";
 import { Card, Select } from "antd";
 import { reload } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 import EventDetails from "./EventDetails";
 const { Text, Link } = Typography;
 
@@ -44,7 +42,6 @@ export default function Events({ userprofile, frm, fmn }) {
     date: [0, 0],
     image: "",
   });
-  const navigate = useNavigate();
   const [year, setyear] = useState(new Date().getFullYear());
   const db = getDatabase(app);
   const [events, setevents] = useState([]);
@@ -54,19 +51,12 @@ export default function Events({ userprofile, frm, fmn }) {
     const data = snapshot.val();
     if (data) {
       var k = Object.keys(data).length;
-      if (events.length !== k || events[0]?.name === "No Events Found") {
+      if (events.length !== k) {
         setevents(Object.values(data));
       }
     } else {
-      if (events.length === 0 || events[0]?.name !== "No Events Found") {
-        setevents([
-          {
-            name: "No Events Found",
-            details: "",
-            date: ["..................", "......................"],
-            image: "",
-          },
-        ]);
+      if (events.length !== 0) {
+        setevents([]);
       }
     }
   });
@@ -81,7 +71,6 @@ export default function Events({ userprofile, frm, fmn }) {
     <Layout>
       <Layout className="site-layout">
         {userprofile ? <CNavbaar2 userprofile={userprofile} /> : <CNavbaar />}
-
         {eventd ? (
           <>
             <Select
@@ -104,71 +93,37 @@ export default function Events({ userprofile, frm, fmn }) {
                 background: colorBgContainer,
               }}
             >
-              {" "}
-              {events.length > 0 ? (
-                <>
-                  <h1>Events:</h1>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      width: "100%",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    {events.map((event, index) => {
-                      return (
-                        <Card
-                          hoverable
-                          key={index}
-                          style={{ width: 240, margin: "1rem" }}
-                          cover={
-                            event.image && <img alt="" src={event.image} />
-                          }
-                          onClick={() => {
-                            if (event.name === "No Events Found") {
-                              navigate("/events");
-                            } else {
-                              seteventdetails(event);
-                              seteventd(false);
-                            }
-                          }}
-                        >
-                          {event.date[0].slice(7, 15) +
-                            "-" +
-                            event.date[1].slice(7, 15)}
-                          <br />
-                          &nbsp;
-                          <Meta
-                            title={event.name}
-                            description={event.details}
-                          />
-                        </Card>
-                      );
-                    })}
-                  </div>
-                </>
-              ) : (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    height: "10vh",
-                    width: "100%",
-                    alignItems: "center",
-                  }}
-                >
-                  {" "}
-                  <SpinnerCircular
-                    size={38}
-                    thickness={180}
-                    speed={97}
-                    color="rgba(57, 80, 172, 0.52)"
-                    secondaryColor="rgba(57, 164, 172, 1)"
-                  />
-                </div>
-              )}
+              <h1>Events:</h1>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  width: "100%",
+                  flexWrap: "wrap",
+                }}
+              >
+                {events.map((event, index) => {
+                  return (
+                    <Card
+                      hoverable
+                      key={index}
+                      style={{ width: 240, margin: "1rem" }}
+                      cover={<img alt="example" src={event.image} />}
+                      onClick={() => {
+                        seteventdetails(event);
+                        seteventd(false);
+                      }}
+                    >
+                      {event.date[0].slice(7, 15) +
+                        "-" +
+                        event.date[1].slice(7, 15)}
+                      <br />
+                      &nbsp;
+                      <Meta title={event.name} description={event.details} />
+                    </Card>
+                  );
+                })}
+              </div>
             </Content>
           </>
         ) : (

@@ -56,7 +56,7 @@ const columns = [
     },
   },
   {
-    title: "Value in ETH",
+    title: "Value",
     dataIndex: "value",
     sorter: {
       compare: (a, b) => a.value - b.value,
@@ -68,7 +68,7 @@ const columns = [
     dataIndex: "event",
   },
   {
-    title: "To Organiser",
+    title: "To",
     dataIndex: "to",
   },
   {
@@ -87,8 +87,7 @@ const columns = [
     title: "Time",
     dataIndex: "time",
     sorter: {
-      compare: (a, b) =>
-        new Date(a.time).getTime() - new Date(b.time).getTime(),
+      compare: (a, b) => a.time - b.time,
       multiple: 4,
     },
   },
@@ -99,7 +98,7 @@ export default function ShowFundsAdmin({ actv, setactv }) {
   const [componentDisabled, setComponentDisabled] = useState(false);
 
   const [error, setError] = useState("");
-  const { logIn, w3state, loadBlockchain } = useUserAuth();
+  const { logIn, w3state } = useUserAuth();
   const navigate = useNavigate();
   const [data, setdata] = useState([]);
   const [tm, settm] = useState("");
@@ -137,18 +136,15 @@ export default function ShowFundsAdmin({ actv, setactv }) {
     onValue(ref(db, "parsec" + year + "funds"), (snapshot) => {
       const dt = snapshot.val();
       if (dt) {
-        if (!w3state?.accounts) {
-          loadBlockchain();
-        }
         var klist = Object.keys(dt);
-        console.log(data, klist, w3state?.accounts);
+        console.log(data, klist, w3state.accounts);
         var k = klist.length;
-        if (k > 0 && w3state?.accounts && data.length < k) {
+        if (k > 0 && w3state.accounts && data.length < k) {
           var vlist = Object.values(dt);
           var mapper = {};
           console.log(vlist);
           var tlst = vlist.map((e) => {
-            mapper[e.blockNumber] = e;
+            mapper[e.blockNumber] = e.event;
             return [e.blockNumber, e.event];
           });
           console.log("->", mapper);
@@ -160,15 +156,11 @@ export default function ShowFundsAdmin({ actv, setactv }) {
               return {
                 key: e[0].blockNumber,
                 blockNumber: e[0].blockNumber,
-                event: mapper[e[0].blockNumber]?.event,
-                value: e[0].value / 1000000000000000000,
-                to: mapper[e[0].blockNumber]?.organiser,
+                event: mapper[e[0].blockNumber],
+                value: e[0].value,
+                to: e[0].to,
                 gas: e[0].gas,
-                sender:
-                  mapper[e[0].blockNumber]?.sendername + ` : (${e[0].from})`,
-                time: new Date(
-                  mapper[e[0]?.blockNumber]?.time
-                ).toLocaleString(),
+                sender: e[0].from,
               };
             });
             console.log("**", d);
@@ -179,7 +171,7 @@ export default function ShowFundsAdmin({ actv, setactv }) {
         setdata([]);
       }
     });
-  }, [year, w3state]);
+  }, [year]);
 
   return (
     <>

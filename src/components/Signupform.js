@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Button, Form, Input, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Divider, Select, Space } from "antd";
@@ -6,16 +6,6 @@ import { SpinnerDotted } from "spinners-react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useUserAuth } from "../context/UserAuthContext";
 import app from "../firebase";
-import Web3 from "web3";
-import {
-  getDatabase,
-  push,
-  ref,
-  set,
-  update,
-  get,
-  child,
-} from "firebase/database";
 
 let index = 0;
 
@@ -48,8 +38,6 @@ const Signupform = ({ actv, setactv }) => {
   const [items, setItems] = useState(["Parsec", "Other"]);
   const [lname, setlName] = useState("");
   const inputRef = useRef(null);
-  const [listAddresses, setlistAddresses] = useState([]);
-  const [acadress, setacaddress] = useState([]);
 
   const addItem = (e) => {
     e.preventDefault();
@@ -62,10 +50,6 @@ const Signupform = ({ actv, setactv }) => {
     setTimeout(() => {
       inputRef.current?.focus();
     }, 0);
-  };
-
-  const handleChange = (value) => {
-    setacaddress(value);
   };
 
   const handleSubmit = async (values) => {
@@ -90,40 +74,6 @@ const Signupform = ({ actv, setactv }) => {
       setComponentDisabled(false);
     }
   };
-  useEffect(() => {
-    async function getAccounts() {
-      // Connect to local Ganache instance
-      const dbRef = ref(getDatabase());
-      const web3 = new Web3("http://localhost:8545");
-      const accounts = await web3.eth.getAccounts();
-      // Get list of accounts from Ganache
-      get(child(dbRef, "userdata/"))
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            const lsts = Object.values(snapshot.val()).map(
-              (item) => item.wallet
-            );
-            const modif = accounts
-              .filter((e) => !lsts?.includes(e))
-              .map((item) => {
-                return { value: item, label: item };
-              });
-            setlistAddresses(modif);
-            console.log(modif);
-          } else {
-            const modif = accounts.map((item) => {
-              return { value: item, label: item };
-            });
-            setlistAddresses(modif);
-            console.log(modif);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    }
-    getAccounts();
-  }, []);
 
   const signin = () => {
     setactv(0);
@@ -155,9 +105,6 @@ const Signupform = ({ actv, setactv }) => {
         >
           <Form.Item name={"name"} label="Name" rules={[{ required: true }]}>
             <Input />
-          </Form.Item>
-          <Form.Item name="wallet" label="wallet address">
-            <Select onChange={handleChange} options={listAddresses} />
           </Form.Item>
           <Form.Item
             name={"email"}

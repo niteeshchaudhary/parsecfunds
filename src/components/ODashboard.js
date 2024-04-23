@@ -61,9 +61,7 @@ export default function PDashboard({ funfrm, fmn }) {
                   bordered={false}
                   style={{ cursor: "pointer", minHeight: "2rem" }}
                   onClick={() => {
-                    loadBlockchain().then((res) => {
-                      navigate("/sponsor");
-                    });
+                    navigate("/sponsor");
                   }}
                 >
                   Sponsor Event
@@ -78,9 +76,7 @@ export default function PDashboard({ funfrm, fmn }) {
                   bordered={false}
                   style={{ cursor: "pointer", minHeight: "2rem" }}
                   onClick={() => {
-                    loadBlockchain().then((res) => {
-                      setCform(2);
-                    });
+                    setCform(2);
                   }}
                 >
                   See Details of Funds

@@ -19,7 +19,7 @@ import { Dropdown } from "antd";
 import { useUserAuth } from "../context/UserAuthContext";
 import { useNavigate } from "react-router-dom";
 
-const pages = ["Dashboard", "Events"];
+const pages = ["Dashboard", "Events", "Funds"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Search = styled("div")(({ theme }) => ({
@@ -77,13 +77,12 @@ function ResponsiveAppBar({ userprofile }) {
     },
     {
       key: "2",
-      label: <p>Balance : {w3state?.balance} Wei</p>,
+      label: <p>Balance : {w3state?.balance} ETH</p>,
     },
     {
       key: "3",
       label: (
         <Button
-          style={{ width: "100%" }}
           onClick={() => {
             logOut();
             navigate("/");
@@ -103,7 +102,13 @@ function ResponsiveAppBar({ userprofile }) {
   };
 
   const handleClickNavMenu = (e) => {
+    var prev = window.location.pathname;
     navigate("/" + e.currentTarget.textContent.toLowerCase());
+    if (
+      window.location.pathname === "/dashboard" &&
+      (prev === window.location.pathname || prev === "funds")
+    )
+      window.location.reload();
 
     setAnchorElNav(null);
   };
@@ -203,12 +208,7 @@ function ResponsiveAppBar({ userprofile }) {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: "none", md: "flex" },
-            }}
-          >
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
                 key={page}
@@ -255,11 +255,7 @@ function ResponsiveAppBar({ userprofile }) {
               <Dropdown menu={{ items }} placement="bottomRight" arrow>
                 <Button
                   onClick={handleCloseNavMenu}
-                  sx={{
-                    my: 2,
-                    color: "white",
-                    display: "block",
-                  }}
+                  sx={{ my: 2, color: "white", display: "block" }}
                 >
                   {userprofile?.name}
                 </Button>

@@ -31,21 +31,15 @@ contract funds is Event {
         uint _eventID,
         uint _amount
     ) external payable {
-        require(
-            msg.sender.balance >= msg.value,
-            "Insufficient balance in contract"
-        );
-        if (_amount == msg.value) {}
-        eventSponsors[_eventID].push(Funds(_account, lastUpdated, msg.value));
-        sponsorsContributions[_account].push(_eventID);
-        payIITDh(Event.iitdh);
+        updateTimestamp();
+            eventSponsors[_eventID].push(Funds(_account, lastUpdated, msg.value));
+            sponsorsContributions[_account].push(_eventID);
+            payIITDh(iitdh);
     }
 
     function payIITDh(address payable _recvAddr) public payable {
         bool sent = _recvAddr.send(msg.value);
-        if (sent) {
-            updateTimestamp();
-        }
+        if (sent) {}
         //require(sent, "Failed to send Ether");
         // payable(iitdh).transfer(_amount);
     }
