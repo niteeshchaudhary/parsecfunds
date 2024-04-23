@@ -42,6 +42,7 @@ export function UserAuthContextProvider({ children }) {
         if (auth.currentUser.emailVerified == false) {
           console.log(auth.currentUser.emailVerified, auth.currentUser.email);
           console.log("false", auth.currentUser.emailVerified);
+          return true;
           await signOut(auth);
           throw new Error("verify the email first");
         } else {
@@ -71,6 +72,7 @@ export function UserAuthContextProvider({ children }) {
         values["cpassword"] = "****";
         set(ref(db, "userdata/" + usr2), values)
           .then((r) => {
+            window.location.href = "/";
             console.log(r);
           })
           .catch((e) => {
@@ -86,6 +88,7 @@ export function UserAuthContextProvider({ children }) {
 
   async function logOut() {
     localStorage.clear();
+    setw3state(null);
     await signOut(auth).then(() => {
       setUser(null);
     });
@@ -103,44 +106,58 @@ export function UserAuthContextProvider({ children }) {
     //usr["profile"] = pf;
     //setUser(usr);
   }
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
-      if (currentuser && !user) {
-        const dbRef = ref(getDatabase());
-        var usr = currentuser.email;
-        var usr1 = usr.replaceAll(".", "_");
-        var usr2 = usr1.replaceAll("@", "_");
-        get(child(dbRef, "userdata/" + usr2))
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              //console.log(snapshot.val());
-              currentuser["profile"] = snapshot.val();
-              setUser(currentuser);
-              console.log(snapshot.val());
-            } else {
-              console.log("No data available");
-            }
-          })
-          .catch((error) => {
-            console.error(error);
-          });
-        // if (result.data.result.status == "1") {
-        //   currentuser["profile"] = result.data.result.desc;
-        //   localStorage.setItem(
-        //     "currentuser",
-        //     JSON.stringify(result.data.result.desc)
-        //   );
-        //   setUser(currentuser);
-        // } else {
-        //   console.log("er0e");
-        // }
-      }
-    });
 
+  const errorsetuser = () => {
+    const dbRef = ref(getDatabase());
+    var usr = auth.currentUser.email;
+    var usr1 = usr.replaceAll(".", "_");
+    var usr2 = usr1.replaceAll("@", "_");
+    get(child(dbRef, "userdata/" + usr2))
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          //console.log(snapshot.val());
+          var cusr = auth.currentUser;
+          cusr["profile"] = snapshot.val();
+          setUser(cusr, loadBlockchain());
+
+          console.log(snapshot.val());
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  const unsubscribe = onAuthStateChanged(auth, (currentuser) => {
+    if (currentuser && !user) {
+      const dbRef = ref(getDatabase());
+      var usr = currentuser.email;
+      var usr1 = usr.replaceAll(".", "_");
+      var usr2 = usr1.replaceAll("@", "_");
+      get(child(dbRef, "userdata/" + usr2))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            //console.log(snapshot.val());
+            currentuser["profile"] = snapshot.val();
+            setUser(currentuser, loadBlockchain());
+
+            console.log(snapshot.val());
+          } else {
+            console.log("No data available");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  });
+
+  useEffect(() => {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [user, auth]);
 
   async function loadWeb3() {
     if (window.ethereuem) {
@@ -156,7 +173,20 @@ export function UserAuthContextProvider({ children }) {
   }
   async function loadBlockchain() {
     const web3 = window.web3;
-    const accounts = await web3.eth.getAccounts();
+    if (
+      w3state?.accounts === user?.profile?.wallet ||
+      (w3state?.accounts && w3state?.balance)
+    ) {
+      return;
+    }
+    var accounts;
+    if (user?.profile?.wallet) {
+      accounts = [user.profile.wallet];
+    } else {
+      return;
+      // accounts = await web3.eth.getAccounts();
+    }
+    // console.log(accounts);
     const networkID = await web3.eth.net.getId();
     const deployedNetwork = s_funds.networks[networkID];
     const balance = await web3.eth.getBalance(accounts[0]);
